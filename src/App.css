@@ -1,0 +1,18 @@
+/* App.css */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color:#a58c69;
+}
+
+.gameAndPlayersContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ovo će postaviti Player 1 s leve strane, a Player 2 s desne strane */
+  width: 100%;
+  padding: 20px;
+}
+
+/* Dodatno, možete primeniti stilove Player 1 i Player 2 kao što ste ranije definisali */
