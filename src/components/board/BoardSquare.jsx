@@ -5,7 +5,6 @@ export function BoardSquare({ padding, onCircleClick, highlightedMoves }) {
     const startPadding = padding;
     const endPadding = 100 - startPadding;
     const square = padding / 10 - 1;
-    console.log(highlightedMoves)
     return (
         <>
             <line className='board-line' x1={startPadding} y1={startPadding} x2={endPadding} y2={startPadding} />
