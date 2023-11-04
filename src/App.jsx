@@ -17,7 +17,7 @@ function App() {
       
           <Routes>
             <Route
-              path="/igra"
+              path="/game"
               element={
                 <React.Fragment>
                   <div className="container">
@@ -45,7 +45,7 @@ function App() {
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                   />
                   </div>
-      </div>
+                </div>
                 </React.Fragment>
               }
             />
@@ -57,13 +57,13 @@ function App() {
                   <h1>Mills / Mica Ubica</h1>
                   <p>Select game mode</p>
                   <Flex gap="small" wrap="wrap">
-                  <Link to='/igra'>
+                  <Link to='/game'>
                   <Button type='primary'>Human vs Human</Button>
                 </Link>
-                <Link to='/igra'>
+                <Link to='/game'>
                   <Button type='primary'>Human vs Computer</Button>
                 </Link>
-                <Link to='/igra'>
+                <Link to='/game'>
                   <Button type='primary'>Computer vs Computer</Button>
                 </Link>
                 </Flex>

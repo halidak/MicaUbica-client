@@ -19,7 +19,7 @@ export function BoardSquare({ padding, onCircleClick, highlightedMoves }) {
         onClick={() => onCircleClick(square, index)}
         cx={getCirclePosition(index, startPadding, endPadding).x}
         cy={getCirclePosition(index, startPadding, endPadding).y}
-        r={highlightedMoves.some(move => move.square === square && move.index === index) ? 1.5 : 1}
+        r={highlightedMoves.some(move => move.square === square && move.index === index) ? 1.5 : 1.3}
     />
 ))}
         </>

@@ -20,8 +20,6 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
     const [lastMill, setLastMill] = useState([]);
     const [allMills, setAllMills] = useState([]);
     const [currentMill, setCurrentMill] = useState([]);
-    
-    
 
     // const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(1);
     // const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(1);
@@ -64,9 +62,6 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
         setStonesInMills(stonesInMills); // Update state with stones in mills
         return stonesInMills.length > 0; // Return true if there are stones in mills
     };
-    
-    
-    
 
     useEffect(() => {
         console.log("STONES IZ USEEFFECT", stones)
@@ -96,6 +91,7 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
             setWhitePlayerStonesOut(0); // Resetujte brojače za whitePlayerStonesOut i blackPlayerStonesOut
             setBlackPlayerStonesOut(0);
         }
+        
     }, [stones, whitePlayerStonesOut, blackPlayerStonesOut]);
 
 
@@ -194,6 +190,10 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 setLastMill(stonesInMills);
                 setIsMills(false);
                 setStonesInMills([]);
+                setCurrentMill([])
+                }
+                else{
+                    alert("Ne mozete izbaciti figure koje su u mlinu");
                 }
             }
             return;
@@ -295,19 +295,18 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
             <BoardSquare padding={20} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             <BoardSquare padding={30} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             {stones.map(({ square, index, color }) => {
-   // const isStoneInMills = stonesInMills.some(stone => stone.square === square && stone.index === index);
-    return (
-        <Stone
-            key={`${square}-${index}-${color}`}
-            square={square}
-            index={index}
-            color={color} // If the stone is in a mill, color it yellow
-            isSelected={selectedStone && selectedStone.square === square && selectedStone.index === index}
-            onSelect={handleStoneSelect}
-        />
-    );
-})}
-
+                const isStoneInMills = currentMill.some(stone => stone.square === square && stone.index === index);
+                return (
+                    <Stone
+                    key={`${square}-${index}-${color}`}
+                    square={square}
+                    index={index}
+                    color={isStoneInMills ? 'yellow' : color}
+                    isSelected={selectedStone && selectedStone.square === square && selectedStone.index === index}
+                    onSelect={handleStoneSelect}
+                    />
+                );
+                })}
         </svg>
     )
 }
