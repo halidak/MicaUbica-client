@@ -15,4 +15,13 @@
   padding: 20px;
 }
 
+.centered-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Visina celog ekrana */
+  background-color:#a58c69;
+}
+
 /* Dodatno, možete primeniti stilove Player 1 i Player 2 kao što ste ranije definisali */

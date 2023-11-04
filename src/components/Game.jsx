@@ -20,7 +20,7 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
     const [lastMill, setLastMill] = useState([]);
     const [allMills, setAllMills] = useState([]);
     const [currentMill, setCurrentMill] = useState([]);
-
+    
     
 
     // const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(1);
@@ -176,24 +176,24 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
         if (isMills) {
             const stone = stones.find(s => s.square === square && s.index === index);
             if (stone && stone.color === color) {
-                const isInAllMills = allMills.some(mill =>
-                    mill.some(s => s.square === square && s.index === index && s.color === color)
-                );
-                
-                if (!isInAllMills) {
-                    // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
-                    const newStones = stones.filter(stone => !(stone.square === square && stone.index === index));
-                    setAllMills(prevMills => [...prevMills, stonesInMills]);
-                    setStones(newStones);
-                    // Proveri boju i dodaj ga u odgovarajući niz lost
-                    if (stone.color === 'white') {
-                        setWhitePlayerStonesOut((prevTotal) => prevTotal + 1);
-                    } else if (stone.color === 'black') {
-                        setBlackPlayerStonesOut((prevTotal) => prevTotal + 1);
-                    }
-                    setLastMill(stonesInMills);
-                    setIsMills(false);
-                    setStonesInMills([]);
+                 const isInAllMills = allMills.some(mill =>
+                mill.some(s => s.square === square && s.index === index && s.color === color)
+            );
+            
+            if (!isInAllMills) {
+                // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
+                const newStones = stones.filter(stone => !(stone.square === square && stone.index === index));
+                setAllMills(prevMills => [...prevMills, stonesInMills]);
+                setStones(newStones);
+                // Proveri boju i dodaj ga u odgovarajući niz lost
+                if (stone.color === 'white') {
+                    setWhitePlayerStonesOut((prevTotal) => prevTotal + 1);
+                } else if (stone.color === 'black') {
+                    setBlackPlayerStonesOut((prevTotal) => prevTotal + 1);
+                }
+                setLastMill(stonesInMills);
+                setIsMills(false);
+                setStonesInMills([]);
                 }
             }
             return;
