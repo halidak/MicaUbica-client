@@ -169,6 +169,14 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
 
         console.log("jesul", areStonesInAllMills)
 
+        const areAllStonesInAllMills = stones.every(stone => {
+            const occurrences = allMills.filter(mill =>
+                mill.some(s => s.square === stone.square && s.index === stone.index && s.color === stone.color)
+            ).length;
+    
+            return occurrences > 0;
+        });
+
         if (isMills) {
             const stone = stones.find(s => s.square === square && s.index === index);
             if (stone && stone.color === color) {
@@ -176,7 +184,7 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 mill.some(s => s.square === square && s.index === index && s.color === color)
             );
             
-            if (!isInAllMills) {
+            if (!isInAllMills || areAllStonesInAllMills) {
                 // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
                 const newStones = stones.filter(stone => !(stone.square === square && stone.index === index));
                 setAllMills(prevMills => [...prevMills, stonesInMills]);

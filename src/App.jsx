@@ -58,13 +58,13 @@ function App() {
                   <p>Select game mode</p>
                   <Flex gap="small" wrap="wrap">
                   <Link to='/game'>
-                  <Button type='primary'>Human vs Human</Button>
+                  <Button>Human vs Human</Button>
                 </Link>
                 <Link to='/game'>
-                  <Button type='primary'>Human vs Computer</Button>
+                  <Button>Human vs Computer</Button>
                 </Link>
                 <Link to='/game'>
-                  <Button type='primary'>Computer vs Computer</Button>
+                  <Button>Computer vs Computer</Button>
                 </Link>
                 </Flex>
                   </div>
