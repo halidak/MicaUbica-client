@@ -2,9 +2,10 @@ import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { Button, Flex } from 'antd';
 import './App.css';
 import { Game } from './components/Game';
-import Player1 from './components/players/Player1';
-import Player2 from './components/players/Player2';
+import Player1 from './components/playersHH/Player1';
+import Player2 from './components/playersHH/Player2';
 import React, { useState } from 'react';
+import { GameHC } from './components/GameHC';
 
 function App() {
   const [totalPlacedStones1, setTotalPlacedStones1] = useState(9);
@@ -50,6 +51,39 @@ function App() {
               }
             />
             <Route
+            path='/gameHC'
+                element={
+                  <React.Fragment>
+                    <div className="container">
+                    <div className="gameAndPlayersContainer">
+                    <Player1
+                    totalPlacedStones1={totalPlacedStones1}
+                    setTotalPlacedStones1={setTotalPlacedStones1}
+                    blackPlayerStonesOut={blackPlayerStonesOut}
+                    setBlackPlayerStonesOut={setBlackPlayerStonesOut}
+                  />
+                   <GameHC
+                    totalPlacedStones1={totalPlacedStones1}
+                    setTotalPlacedStones1={setTotalPlacedStones1}
+                    totalPlacedStones2={totalPlacedStones2}
+                    setTotalPlacedStones2={setTotalPlacedStones2}
+                    whitePlayerStonesOut={whitePlayerStonesOut}
+                    blackPlayerStonesOut={blackPlayerStonesOut}
+                    setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    setBlackPlayerStonesOut={setBlackPlayerStonesOut}
+                    />
+                    <Player2
+                    totalPlacedStones2={totalPlacedStones2}
+                    setTotalPlacedStones2={setTotalPlacedStones2}
+                    whitePlayerStonesOut={whitePlayerStonesOut}
+                    setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    />
+                    </div>
+                    </div>
+                  </React.Fragment>
+              }
+            />
+            <Route
               path="/"
               element={
                 <React.Fragment>
@@ -60,10 +94,10 @@ function App() {
                   <Link to='/game'>
                   <Button>Human vs Human</Button>
                 </Link>
-                <Link to='/game'>
+                <Link to='/gameHC'>
                   <Button>Human vs Computer</Button>
                 </Link>
-                <Link to='/game'>
+                <Link to='/gameCC'>
                   <Button>Computer vs Computer</Button>
                 </Link>
                 </Flex>
