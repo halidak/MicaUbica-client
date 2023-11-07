@@ -8,8 +8,8 @@ import { millsPostitions } from './millsPositions';
 export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedStones2, setTotalPlacedStones2,
     whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut }) {
     
-        const [humanStones, setHumanStones] = useState([])
-        const [computerStones, setComputerStones] = useState([])
+    const [humanStones, setHumanStones] = useState([])
+    const [computerStones, setComputerStones] = useState([])
     const [stones, setStones] = useState([]);
     const [color, setColor] = useState('white');
     const [selectedStone, setSelectedStone] = useState(null);
@@ -34,7 +34,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         const data = {
             humanStones,
             computerStones,
-            totalPlacedStones2
+            totalPlacedStones2,
         };
     
         // Postavite opcije za POST zahtev
@@ -59,12 +59,15 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 // Obrada odgovora sa servera, ako je potrebno
                 console.log('Server response:', data);
                 setComputerStones(data.computerStones);
+                console.log(computerStones)
                 setTotalPlacedStones2(data.totalPlacedStones2)
+                //setCanPlay(true)
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     };
+    
     
 
     const checkAndHighlightStones = (stonesToCheck) => {
@@ -137,7 +140,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setBlackPlayerStonesOut(0);
         }
         
-    }, [humanStones, whitePlayerStonesOut, blackPlayerStonesOut]);
+    }, [humanStones, whitePlayerStonesOut, blackPlayerStonesOut, computerStones]);
 
 
     const toggleColor = () => {
@@ -158,6 +161,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     moveStone(selectedStone, targetCircle);
                     //toggleColor();
                     setLastMill(stonesInMills);
+
                 }
             }
         } else {
@@ -325,7 +329,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
         // Postavljanje novog niza kamenova
         setStones(newStones);
-        setHumanStones(newStones)
+        setHumanStones(newStones);
         setLastMill(stonesInMills);
 
         const movedStonesInMills = stonesInMills.filter(stoneInMill => {

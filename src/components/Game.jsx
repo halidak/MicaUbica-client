@@ -234,7 +234,7 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
             return;
         }
     
-        if (totalPlacedStones1 !== 0 && totalPlacedStones2 !== 0) {
+        if (totalPlacedStones1 !== -1 && totalPlacedStones2 !== 0) {
             return;
         }
     
