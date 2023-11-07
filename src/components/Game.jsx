@@ -109,10 +109,30 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
     
         if ((newColor === 'white' && totalPlacedStones1 <= 0) || (newColor === 'black' && totalPlacedStones2 <= 0)) {
             if (selectedStone != null) {
-                if (isCircleFree(targetCircle.square, targetCircle.index) &&  isMoveAllowed(selectedStone.square, selectedStone.index, targetCircle.square, targetCircle.index, stones)) {
-                    moveStone(selectedStone, targetCircle);
-                    toggleColor();
-                    setLastMill(stonesInMills);
+                //ako ima 3 od nekog bilo kojeg dozvoli mu na svako slobodno mesto da postavi kamen
+                // If whitePlayerStonesOut === 6, allow white player to move to any free space
+                if(whitePlayerStonesOut === 6 && color === 'white'){
+                    if (isCircleFree(targetCircle.square, targetCircle.index)) {
+                        moveStone(selectedStone, targetCircle);
+                        toggleColor();
+                        setLastMill(stonesInMills);
+                    }
+                }
+                // If blackPlayerStonesOut === 6, allow black player to move to any free space
+                else if(blackPlayerStonesOut === 6 && color === 'black'){
+                    if (isCircleFree(targetCircle.square, targetCircle.index)) {
+                        moveStone(selectedStone, targetCircle);
+                        toggleColor();
+                        setLastMill(stonesInMills);
+                    }
+                }
+                else{
+
+                    if (isCircleFree(targetCircle.square, targetCircle.index) &&  isMoveAllowed(selectedStone.square, selectedStone.index, targetCircle.square, targetCircle.index, stones)) {
+                        moveStone(selectedStone, targetCircle);
+                        toggleColor();
+                        setLastMill(stonesInMills);
+                    }
                 }
             }
         } else {
@@ -223,11 +243,19 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
             setSelectedStone(null);
             setHighlightedMoves([]);
         } else {
-            // Otherwise, set the selected stone
-            setSelectedStone({ square, index });
-            setHighlightedMoves(allowedMoves[square][index]);
+                // Otherwise, set the selected stone
+                setSelectedStone({ square, index });
+                if ((whitePlayerStonesOut === 6 && color === 'white') || (blackPlayerStonesOut === 6 && color === 'black')) {
+                    const freeSpaces = stones.filter(s => isCircleFree(s.square, s.index)).map(s => ({ square: s.square, index: s.index }));
+                    console.log(freeSpaces);
+                    setHighlightedMoves(freeSpaces);
+                } else {
+                    setHighlightedMoves(allowedMoves[square][index]);
+                }
         }
-    
+
+        
+        //napravi da se osvetle
         console.log('Selected Stone:', selectedStone); // Log the selected stone for debugging
     };
 

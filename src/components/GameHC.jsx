@@ -9,22 +9,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut }) {
     
         const [humanStones, setHumanStones] = useState([])
-        const [computerStones, setComputerStones] = useState([        
-        {
-            square: 1,
-            index: 1,
-            color: 'black'
-        },
-        {
-            square: 1,
-            index: 2,
-            color: 'black'
-        },
-        {
-            square: 1,
-            index: 0,
-            color: 'black'
-        },])
+        const [computerStones, setComputerStones] = useState([])
     const [stones, setStones] = useState([]);
     const [color, setColor] = useState('white');
     const [selectedStone, setSelectedStone] = useState(null);
@@ -42,6 +27,43 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     // const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(1);
     // const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(1);
     const [canPlay, setCanPlay] = useState(true)
+
+    //slanje requesta 
+    const sendPostRequest = (humanStones, computerStones) => {
+        // Napravite objekat sa podacima koje želite poslati na server
+        const data = {
+            humanStones,
+            computerStones,
+        };
+    
+        // Postavite opcije za POST zahtev
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        };
+    
+        // Zamijenite 'https://example.com/api' sa stvarnim URL-om na koji želite poslati zahtev
+        const apiUrl = 'http://localhost:8000/stones';
+    
+        // Pošaljite POST zahtev na server
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Obrada odgovora sa servera, ako je potrebno
+                console.log('Server response:', data);
+                setComputerStones(data.computerStones);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+    
 
     const checkAndHighlightStones = (stonesToCheck) => {
         const stonesInMills = [];
@@ -90,6 +112,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("PRETHODNI", lastMill)
         console.log("SVI", allMills)
         console.log("HUMAN", humanStones)
+        console.log("COMPUTER", computerStones)
         if (isMills) {
             setCurrentMill(stonesInMills);
         }
@@ -142,6 +165,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setStones(newStones);
             setHumanStones(newStones)
             //toggleColor();
+            sendPostRequest(humanStones, computerStones)
         
             if (newColor === 'white') {
                 setTotalPlacedStones1((prevTotal) => prevTotal - 1);
@@ -269,7 +293,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
 
     const isCircleFree = (square, index) => {
-        for (let stone of stones) {
+        for (let stone of computerStones) {
             if (stone.square === square && stone.index === index) {
                 return false;
             }
