@@ -246,7 +246,17 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 // Otherwise, set the selected stone
                 setSelectedStone({ square, index });
                 if ((whitePlayerStonesOut === 6 && color === 'white') || (blackPlayerStonesOut === 6 && color === 'black')) {
-                    const freeSpaces = stones.filter(s => isCircleFree(s.square, s.index)).map(s => ({ square: s.square, index: s.index }));
+                    const allMoves = [];
+                    for (let square = 0; square < 3; square++) {
+                        for (let index = 0; index < 8; index++) {
+                            allMoves.push({ square, index });
+                        }
+                    }
+
+                    const freeSpaces = allMoves.filter(move => {
+                        return !stones.some(stone => stone.square === move.square && stone.index === move.index);
+                    });
+
                     console.log(freeSpaces);
                     setHighlightedMoves(freeSpaces);
                 } else {
