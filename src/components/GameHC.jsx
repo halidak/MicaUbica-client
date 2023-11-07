@@ -29,11 +29,12 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     const [canPlay, setCanPlay] = useState(true)
 
     //slanje requesta 
-    const sendPostRequest = (humanStones, computerStones) => {
+    const sendPostRequest = (newStones, computerStones, totalPlacedStones2) => {
         // Napravite objekat sa podacima koje želite poslati na server
         const data = {
             humanStones,
             computerStones,
+            totalPlacedStones2
         };
     
         // Postavite opcije za POST zahtev
@@ -58,6 +59,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 // Obrada odgovora sa servera, ako je potrebno
                 console.log('Server response:', data);
                 setComputerStones(data.computerStones);
+                setTotalPlacedStones2(data.totalPlacedStones2)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -163,15 +165,16 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             const hasMills = checkAndHighlightStones(newStones);
             setIsMills(hasMills);
             setStones(newStones);
+            console.log("NEW", newStones)
             setHumanStones(newStones)
             //toggleColor();
-            sendPostRequest(humanStones, computerStones)
-        
+            
             if (newColor === 'white') {
                 setTotalPlacedStones1((prevTotal) => prevTotal - 1);
             } else if (newColor === 'black') {
                 setTotalPlacedStones2((prevTotal) => prevTotal - 1);
             }
+            sendPostRequest(newStones, computerStones, totalPlacedStones2)
         }
         console.log(stones);
     };
