@@ -24,4 +24,13 @@
   background-color:#a58c69;
 }
 
+.dugmad{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+
 /* Dodatno, možete primeniti stilove Player 1 i Player 2 kao što ste ranije definisali */

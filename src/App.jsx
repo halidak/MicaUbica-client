@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import { Button, Flex } from 'antd';
+import { Button, Flex, Modal } from 'antd';
 import './App.css';
 import { Game } from './components/Game';
 import Player1 from './components/playersHH/Player1';
@@ -12,6 +12,22 @@ function App() {
   const [totalPlacedStones2, setTotalPlacedStones2] = useState(9);
   const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(0);
   const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const customCloseButton = (
+    <span className="custom-close-button" role="img" aria-label="close">
+      {/* You can replace this with your own close button icon or text */}
+    </span>
+  );
+
+  const customModalFooter = (
+    <div>
+      {/* Add any additional footer content if needed */}
+      <Button onClick={() => setIsModalOpen(false)}>{customCloseButton}Close</Button>
+    </div>
+  );
 
   return (
     <Router>
@@ -94,9 +110,29 @@ function App() {
                   <Link to='/game'>
                   <Button>Human vs Human</Button>
                 </Link>
-                <Link to='/gameHC'>
+                {/* <Link to='/gameHC'>
                   <Button>Human vs Computer</Button>
+                </Link> */}
+                 <Button onClick={showModal}>
+                 Human vs Computer
+                </Button>
+                <Modal title="Select level" open={isModalOpen} closeIcon={customCloseButton} footer={customModalFooter}>
+                  <div className='dugmad'>
+                   <Link to='/gameHC'>
+                  <Button type="primary">Easy</Button>
                 </Link>
+                <br></br>
+                <br></br>
+                <Link to='/gameHC'>
+                  <Button type="primary">Medium</Button>
+                </Link>
+                <br></br>
+                <br></br>
+                <Link to='/gameHC'>
+                  <Button type="primary">Hard</Button>
+                </Link>
+                  </div>
+                </Modal>
                 <Link to='/gameCC'>
                   <Button>Computer vs Computer</Button>
                 </Link>

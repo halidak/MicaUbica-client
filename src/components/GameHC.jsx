@@ -27,14 +27,32 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     // const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(1);
     // const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(1);
     const [canPlay, setCanPlay] = useState(true)
+    const [nextPlayer, setNextPlayer] = useState('human')
+
 
     //slanje requesta 
-    const sendPostRequest = (newStones, computerStones, totalPlacedStones2) => {
+    const sendPostRequest = (humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones1,
+        whitePlayerStonesOut, blackPlayerStonesOut ) => {
         // Napravite objekat sa podacima koje želite poslati na server
+        //console log svega sto saljem
+        let dataToSend = {
+            human_stones: humanStones,
+            computer_stones: computerStones,
+            total_placed_stones2: totalPlacedStones2,
+            next_player: nextPlayer,
+            total_placed_stones1: totalPlacedStones1,
+            white_player_stones_out: whitePlayerStonesOut,
+            black_player_stones_out: blackPlayerStonesOut
+        }
+        console.log("DATA TO SEND", dataToSend)
         const data = {
             humanStones,
             computerStones,
             totalPlacedStones2,
+            nextPlayer,
+            totalPlacedStones1,
+            whitePlayerStonesOut,
+            blackPlayerStonesOut
         };
     
         // Postavite opcije za POST zahtev
@@ -61,7 +79,11 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setComputerStones(data.computerStones);
                 console.log(computerStones)
                 setTotalPlacedStones2(data.totalPlacedStones2)
+                if(data.isComputerMills === true){
+                    setCurrentMill(data.found_mill)
+                }
                 //setCanPlay(true)
+                setNextPlayer('human')
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -120,6 +142,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("COMPUTER", computerStones)
         if (isMills) {
             setCurrentMill(stonesInMills);
+            console.log(currentMill)
         }
         if (whitePlayerStonesOut === 7 || blackPlayerStonesOut === 7) {
             if (whitePlayerStonesOut === 7) {
@@ -140,7 +163,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setBlackPlayerStonesOut(0);
         }
         
-    }, [humanStones, whitePlayerStonesOut, blackPlayerStonesOut, computerStones]);
+    }, [humanStones, whitePlayerStonesOut, blackPlayerStonesOut]);
 
 
     const toggleColor = () => {
@@ -169,7 +192,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             const hasMills = checkAndHighlightStones(newStones);
             setIsMills(hasMills);
             setStones(newStones);
-            console.log("NEW", newStones)
             setHumanStones(newStones)
             //toggleColor();
             
@@ -178,7 +200,9 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             } else if (newColor === 'black') {
                 setTotalPlacedStones2((prevTotal) => prevTotal - 1);
             }
-            sendPostRequest(newStones, computerStones, totalPlacedStones2)
+            console.log("NEW", newStones)
+            setNextPlayer('computer')
+            sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut)
         }
         console.log(stones);
     };
@@ -245,7 +269,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setStones(newStones);
                 setComputerStones(newStones)
                 // Proveri boju i dodaj ga u odgovarajući niz lost
-                if (!canPlay) {
+                if (canPlay == 'human') {
                     setWhitePlayerStonesOut((prevTotal) => prevTotal + 1);
                 } else {
                     setBlackPlayerStonesOut((prevTotal) => prevTotal + 1);
