@@ -14,6 +14,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     const [color, setColor] = useState('white');
     const [selectedStone, setSelectedStone] = useState(null);
     const [highlightedMoves, setHighlightedMoves] = useState([]);
+    const [compusterMills, setComputerMills] = useState([])
     
    useEffect(() => {
 
@@ -42,7 +43,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
 
     //slanje requesta 
     const sendPostRequest = (humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones1,
-        whitePlayerStonesOut, blackPlayerStonesOut ) => {
+        whitePlayerStonesOut, blackPlayerStonesOut, allMills ) => {
         // Napravite objekat sa podacima koje želite poslati na server
         //console log svega sto saljem
         let dataToSend = {
@@ -98,6 +99,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     setCurrentMill(data.found_mill)
                 }
                 //setCanPlay(true)
+                setComputerMills(data.computerMills)
                 setNextPlayer('human')
             })
             .catch(error => {
@@ -199,28 +201,28 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     moveStone(selectedStone, targetCircle);
                     //toggleColor();
                     setLastMill(stonesInMills);
-
                 }
             }
         } else {
             if(nextPlayer == 'human'){
-
                 const newStones = [...humanStones, { square, index, color: newColor }];
                 const hasMills = checkAndHighlightStones(newStones);
-            setIsMills(hasMills);
-            setStones(newStones);
-            setHumanStones(newStones)
-            //toggleColor();
-            
-            if (newColor === 'white') {
-                setTotalPlacedStones1((prevTotal) => prevTotal - 1);
-            } else if (newColor === 'black') {
-                setTotalPlacedStones2((prevTotal) => prevTotal - 1);
+                setIsMills(hasMills);
+                setStones(newStones);
+                setHumanStones(newStones)
+                //toggleColor();
+                
+                if (newColor === 'white') {
+                    setTotalPlacedStones1((prevTotal) => prevTotal - 1);
+                } else if (newColor === 'black') {
+                    setTotalPlacedStones2((prevTotal) => prevTotal - 1);
+                }
+                console.log("NEW", newStones)
+                setNextPlayer('computer')
+                if(!hasMills){
+                    sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)
+                }
             }
-            console.log("NEW", newStones)
-            setNextPlayer('computer')
-            sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut)
-        }
         }
         console.log(stones);
     };
@@ -264,7 +266,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("jesul", areStonesInAllMills)
 
         const areAllStonesInAllMills = computerStones.every(stone => {
-            const occurrences = allMills.filter(mill =>
+            const occurrences = compusterMills.filter(mill =>
                 mill.some(s => s.square === stone.square && s.index === stone.index && s.color === stone.color)
             ).length;
     
@@ -276,11 +278,19 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             const stone = computerStones.find(s => s.square === square && s.index === index);
             console.log("STONE", stone)
             if (stone) {
-                const isInAllMills = allMills.some(mill =>
+                const isInAllMills = compusterMills.some(mill =>
                 mill.some(s => s.square === square && s.index === index && s.color === color)
             );
             
             if (!isInAllMills || areAllStonesInAllMills) {
+                const isInComputerMills = compusterMills.some(mill =>
+                    mill.some(s => s.square === square && s.index === index)
+                );
+
+                if (isInComputerMills) {
+                    alert("Cannot remove stones that are part of a mill.");
+                    return;
+                }
                 // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
                 const newStones = computerStones.filter(stone => !(stone.square === square && stone.index === index));
                 setAllMills(prevMills => [...prevMills, stonesInMills]);
@@ -296,9 +306,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setIsMills(false);
                 setStonesInMills([]);
                 setCurrentMill([])
-                }
-                else{
-                    alert("Ne mozete izbaciti figure koje su u mlinu");
+                sendPostRequest(humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
                 }
             }
             return;
@@ -357,7 +365,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             console.log("Mills are active. Cannot move stone.");
             return;
         }
-        
     
         // Prvo se kreira novi niz bez starog kamena
         const newStones = stones.filter(stone => !(stone.square === selectedStone.square && stone.index === selectedStone.index));
@@ -399,27 +406,27 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             <BoardSquare padding={10} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             <BoardSquare padding={20} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             <BoardSquare padding={30} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
-            {humanStones.map(({ square, index, color }) => {
+            {humanStones.map(({ square, index }) => {
                    const isStoneInMills = currentMill.some(stone => stone.square === square && stone.index === index);
                 return (
                     <Stone
-                    key={`${square}-${index}-${color}`}
+                    key={`${square}-${index}`}
                     square={square}
                     index={index}
-                    color={isStoneInMills ? 'yellow' : color}
+                    color={isStoneInMills ? 'yellow' : "white"}
                     isSelected={selectedStone && selectedStone.square === square && selectedStone.index === index}
                     onSelect={handleStoneSelect}
                     />
                 );
                 })}
-                {computerStones.map(({ square, index, color }) => {
+                {computerStones.map(({ square, index }) => {
                    const isStoneInMills = currentMill.some(stone => stone.square === square && stone.index === index);
                 return (
                     <Stone
-                    key={`${square}-${index}-${color}`}
+                    key={`${square}-${index}`}
                     square={square}
                     index={index}
-                    color={isStoneInMills ? 'yellow' : color}
+                    color={isStoneInMills ? 'yellow' : "black"}
                     isSelected={selectedStone && selectedStone.square === square && selectedStone.index === index}
                     onSelect={handleStoneSelect}
                     />
