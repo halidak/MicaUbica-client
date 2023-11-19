@@ -91,7 +91,8 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 console.log("NEXT PLAYER", data.nextPlayer)
                 setComputerStones(data.computerStones);
                 setHumanStones(data.humanStones)
-                console.log(computerStones)
+                console.log("NOVI HUMAN", humanStones)
+                console.log("komp",computerStones)
                 setTotalPlacedStones2(data.totalPlacedStones2)
                 setWhitePlayerStonesOut(data.whitePlayerStonesOut)
 
@@ -393,7 +394,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("After moveStone:", newStones);
         console.log(totalPlacedStones1);
         console.log(totalPlacedStones2);
-        
+        sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
     };
     
 
@@ -406,11 +407,11 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             <BoardSquare padding={10} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             <BoardSquare padding={20} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
             <BoardSquare padding={30} onCircleClick={onCircleClick} highlightedMoves={highlightedMoves}/>
-            {humanStones.map(({ square, index }) => {
+            {humanStones.map(({ square, index, color }) => {
                    const isStoneInMills = currentMill.some(stone => stone.square === square && stone.index === index);
                 return (
                     <Stone
-                    key={`${square}-${index}`}
+                    key={`${square}-${index}-${color}`}
                     square={square}
                     index={index}
                     color={isStoneInMills ? 'yellow' : "white"}
@@ -419,11 +420,11 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     />
                 );
                 })}
-                {computerStones.map(({ square, index }) => {
+                {computerStones.map(({ square, index, color }) => {
                    const isStoneInMills = currentMill.some(stone => stone.square === square && stone.index === index);
                 return (
                     <Stone
-                    key={`${square}-${index}`}
+                    key={`${square}-${index}-${color}`}
                     square={square}
                     index={index}
                     color={isStoneInMills ? 'yellow' : "black"}
