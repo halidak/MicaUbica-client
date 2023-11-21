@@ -198,10 +198,20 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
         if ((totalPlacedStones1 === 0) || (totalPlacedStones2 < 0)) {
             if (selectedStone != null) {
-                if (isCircleFree(targetCircle.square, targetCircle.index) &&  isMoveAllowed(selectedStone.square, selectedStone.index, targetCircle.square, targetCircle.index, stones)) {
-                    moveStone(selectedStone, targetCircle);
-                    //toggleColor();
-                    setLastMill(stonesInMills);
+                if(whitePlayerStonesOut === 6 && color === 'white'){
+                    if (isCircleFree(targetCircle.square, targetCircle.index)) {
+                        moveStone(selectedStone, targetCircle);
+                        toggleColor();
+                        setLastMill(stonesInMills);
+                    }
+                }
+                else{
+
+                    if (isCircleFree(targetCircle.square, targetCircle.index) &&  isMoveAllowed(selectedStone.square, selectedStone.index, targetCircle.square, targetCircle.index, stones)) {
+                        moveStone(selectedStone, targetCircle);
+                        //toggleColor();
+                        setLastMill(stonesInMills);
+                    }
                 }
             }
         } else {
@@ -219,8 +229,8 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     setTotalPlacedStones2((prevTotal) => prevTotal - 1);
                 }
                 console.log("NEW", newStones)
-                setNextPlayer('computer')
                 if(!hasMills){
+                    setNextPlayer('computer')
                     sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)
                 }
             }
@@ -307,6 +317,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setIsMills(false);
                 setStonesInMills([]);
                 setCurrentMill([])
+                setNextPlayer('computer')
                 sendPostRequest(humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
                 }
             }
@@ -394,6 +405,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("After moveStone:", newStones);
         console.log(totalPlacedStones1);
         console.log(totalPlacedStones2);
+        setNextPlayer('computer')
         sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
     };
     
