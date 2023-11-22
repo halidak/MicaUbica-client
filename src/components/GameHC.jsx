@@ -6,7 +6,7 @@ import { allowedMoves } from './allowedMoves';
 import { millsPostitions } from './millsPositions';
 
 export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedStones2, setTotalPlacedStones2,
-    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut }) {
+    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut, level }) {
     
     const [humanStones, setHumanStones] = useState([])
     const [computerStones, setComputerStones] = useState([])
@@ -18,34 +18,28 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
    useEffect(() => {
 
-     const apiUrlReset = 'http://localhost:8000/reset';
-    
-     fetch(apiUrlReset)
-         .then(response => {
-             console.log(response)
-         })
-
+        const apiUrlReset = 'http://localhost:8000/reset';
+        
+        fetch(apiUrlReset)
+            .then(response => {
+                console.log(response)
+            })
    }, [])
+
+
     const [isMills, setIsMills] = useState(false);
     const [stonesInMills, setStonesInMills] = useState([]); // Dodaj stanje za kamenje u mlinovima
-    //const [previousMills, setPreviousMills] = useState([]); // Dodaj stanje za prethodne mlinove
     const [lastMill, setLastMill] = useState([]);
     const [allMills, setAllMills] = useState([]);
     const [currentMill, setCurrentMill] = useState([]);
 
-    // const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(1);
-    // const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(1);
     const [canPlay, setCanPlay] = useState(true)
     const [nextPlayer, setNextPlayer] = useState('human')
-    // const [allBlack, setAllBlack] = useState([])
-    // const [allWhite, setAllWhite] = useState([])
 
 
     //slanje requesta 
     const sendPostRequest = (humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones1,
         whitePlayerStonesOut, blackPlayerStonesOut, allMills ) => {
-        // Napravite objekat sa podacima koje želite poslati na server
-        //console log svega sto saljem
         let dataToSend = {
             human_stones: humanStones,
             computer_stones: computerStones,
@@ -54,7 +48,8 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             total_placed_stones1: totalPlacedStones1,
             white_player_stones_out: whitePlayerStonesOut,
             black_player_stones_out: blackPlayerStonesOut,
-            allMills
+            allMills,
+            level
         }
         console.log("DATA TO SEND", dataToSend)
         const data = {
@@ -64,20 +59,18 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             nextPlayer,
             totalPlacedStones1,
             whitePlayerStonesOut,
-            blackPlayerStonesOut
+            blackPlayerStonesOut,
+            level
         };
     
-        // Postavite opcije za POST zahtev
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         };
     
-        // Zamijenite 'https://example.com/api' sa stvarnim URL-om na koji želite poslati zahtev
         const apiUrl = 'http://localhost:8000/stones';
     
-        // Pošaljite POST zahtev na server
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
@@ -107,8 +100,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 console.error('Error:', error);
             });
     };
-    
-    
 
     const checkAndHighlightStones = (stonesToCheck) => {
         const stonesInMills = [];
@@ -150,19 +141,20 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     };
 
     useEffect(() => {
-        console.log("STONES IZ USEEFFECT", stones)
+        console.log("PLAYER", nextPlayer)
+        // console.log("STONES IZ USEEFFECT", stones)
         checkAndHighlightStones(stones);
         console.log(stonesInMills);
-        console.log("TRENUTNI", stonesInMills)
-        console.log("PRETHODNI", lastMill)
-        console.log("SVI", allMills)
+        // console.log("TRENUTNI", stonesInMills)
+        // console.log("PRETHODNI", lastMill)
+        // console.log("SVI", allMills)
         console.log("HUMAN", humanStones)
         console.log("COMPUTER", computerStones)
         if (isMills) {
             setCurrentMill(stonesInMills);
             console.log(currentMill)
         }
-        if (whitePlayerStonesOut === 7 || blackPlayerStonesOut === 7) {
+        if (whitePlayerStonesOut === 7 || blackPlayerStonesOut === 7 || hasAvailableMoves(humanStones == false || hasAvailableMoves(computerStones) == false)) {
             if (whitePlayerStonesOut === 7) {
                 alert("Player 2 je pobedio!");
             } else if (blackPlayerStonesOut === 7) {
@@ -184,6 +176,30 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     }, [humanStones, whitePlayerStonesOut, blackPlayerStonesOut]);
 
 
+    const hasAvailableMoves = (stones) => {
+        for (const square in allowedMoves) {
+            // Check if allowedMoves[square] is defined
+            if (allowedMoves[square]) {
+                for (const index in allowedMoves[square]) {
+                    // Check if allowedMoves[square][index] is defined
+                    if (allowedMoves[square][index]) {
+                        if (stones[square] && stones[square][index] !== null) {
+                            const moves = allowedMoves[square][index];
+                            for (const move of moves) {
+                                // Check if stones[move.square] is defined
+                                if (stones[move.square] && stones[move.square][move.index] === null) {
+                                    return true; // At least one available move is found
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false; // No available moves
+    };
+    
+
     const toggleColor = () => {
         setColor(c => c === 'white' ? 'black' : 'white');
     };
@@ -201,7 +217,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 if(whitePlayerStonesOut === 6 && color === 'white'){
                     if (isCircleFree(targetCircle.square, targetCircle.index)) {
                         moveStone(selectedStone, targetCircle);
-                        toggleColor();
+                        //toggleColor();
                         setLastMill(stonesInMills);
                     }
                 }
@@ -258,14 +274,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     };
 
     const handleStoneSelect = (square, index) => {
-        //let areMillsSame = false;
-        // if (stonesInMills.length > 0 && previousMills.length > 0) {
-        //     areMillsSame = stonesInMills.every((currStone, index) =>
-        //         currStone.square === previousMills[index].square && currStone.index === previousMills[index].index
-        //     );
-        // }
-
-        
+       
         const areStonesInAllMills = stonesInMills.every(stoneInMill => {
             const occurrences = allMills.filter(allMill =>
                 allMill.square === stoneInMill.square && allMill.index === stoneInMill.index
@@ -273,9 +282,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         
             return occurrences === 0;
         });
-
-        console.log("jesul", areStonesInAllMills)
-
+        
         const areAllStonesInAllMills = computerStones.every(stone => {
             const occurrences = compusterMills.filter(mill =>
                 mill.some(s => s.square === stone.square && s.index === stone.index && s.color === stone.color)
@@ -283,7 +290,8 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
             return occurrences > 0;
         });
-
+        
+        console.log("jesul", areAllStonesInAllMills)
         if (isMills) {
             
             const stone = computerStones.find(s => s.square === square && s.index === index);
@@ -318,23 +326,24 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setStonesInMills([]);
                 setCurrentMill([])
                 setNextPlayer('computer')
-                sendPostRequest(humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
+                sendPostRequest(humanStones, newStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
                 }
             }
             return;
         }
         // Pronađite kamen na datoj lokaciji
-        const stone = stones.find(s => s.square === square && s.index === index);
+        const stone = humanStones.find(s => s.square === square && s.index === index);
     
         // Ako kamen ne postoji ili njegova boja ne odgovara trenutnoj boji, ne dozvolite odabir
-        if (!stone || stone.color !== color) {
+        if (!stone || stone.color !== 'white') {
+            console.log("hocu da selektujem")
             return;
         }
     
         if (totalPlacedStones1 !== 0 && totalPlacedStones2 !== 0) {
             return;
         }
-    
+        console.log("hocu da selektujem")
         // Check if the clicked stone is the same as the selected one
         if (selectedStone && selectedStone.square === square && selectedStone.index === index) {
             setSelectedStone(null);
@@ -379,10 +388,10 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         }
     
         // Prvo se kreira novi niz bez starog kamena
-        const newStones = stones.filter(stone => !(stone.square === selectedStone.square && stone.index === selectedStone.index));
+        const newStones = humanStones.filter(stone => !(stone.square === selectedStone.square && stone.index === selectedStone.index));
     
         // Pronađite boju kamena na staroj lokaciji
-        const oldStone = stones.find(stone => stone.square === selectedStone.square && stone.index === selectedStone.index);
+        const oldStone = humanStones.find(stone => stone.square === selectedStone.square && stone.index === selectedStone.index);
         const color = oldStone ? oldStone.color : 'white'; // Uzmi boju ako je dostupna, inače postavi na 'white'
     
         // Zatim se dodaje ažurirani kamen na novi niz sa istom bojom
@@ -405,8 +414,10 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         console.log("After moveStone:", newStones);
         console.log(totalPlacedStones1);
         console.log(totalPlacedStones2);
-        setNextPlayer('computer')
-        sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
+       if(!hasMills){
+            setNextPlayer('computer')
+            sendPostRequest(newStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
+       }
     };
     
 
@@ -439,7 +450,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     key={`${square}-${index}-${color}`}
                     square={square}
                     index={index}
-                    color={isStoneInMills ? 'yellow' : "black"}
+                    color={isStoneInMills ? 'green' : "black"}
                     isSelected={selectedStone && selectedStone.square === square && selectedStone.index === index}
                     onSelect={handleStoneSelect}
                     />

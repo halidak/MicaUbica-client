@@ -13,6 +13,7 @@ function App() {
   const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(0);
   const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [level, setLevel] = useState(0)
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -31,7 +32,6 @@ function App() {
 
   return (
     <Router>
-      
           <Routes>
             <Route
               path="/game"
@@ -87,6 +87,7 @@ function App() {
                     blackPlayerStonesOut={blackPlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
+                    level={level}
                     />
                     <Player2
                     totalPlacedStones2={totalPlacedStones2}
@@ -119,17 +120,23 @@ function App() {
                 <Modal title="Select level" open={isModalOpen} closeIcon={customCloseButton} footer={customModalFooter}>
                   <div className='dugmad'>
                    <Link to='/gameHC'>
-                  <Button type="primary">Easy</Button>
+                  <Button type="primary"
+                  onClick={() => setLevel(0)}
+                  >Easy</Button>
                 </Link>
                 <br></br>
                 <br></br>
                 <Link to='/gameHC'>
-                  <Button type="primary">Medium</Button>
+                  <Button type="primary"
+                  onClick={() => setLevel(1)}
+                  >Medium</Button>
                 </Link>
                 <br></br>
                 <br></br>
                 <Link to='/gameHC'>
-                  <Button type="primary">Hard</Button>
+                  <Button type="primary"
+                   onClick={() => setLevel(2)}
+                  >Hard</Button>
                 </Link>
                   </div>
                 </Modal>
