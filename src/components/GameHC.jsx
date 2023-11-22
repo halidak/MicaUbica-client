@@ -167,6 +167,9 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setHighlightedMoves([]);
             setIsMills(false);
             setStonesInMills([]);
+            setHumanStones([])
+            setComputerStones([])
+            setStones([])
             setTotalPlacedStones1(9); // Postavite broj postavljenih kamenova na početnu vrednost
             setTotalPlacedStones2(9);
             setWhitePlayerStonesOut(0); // Resetujte brojače za whitePlayerStonesOut i blackPlayerStonesOut
