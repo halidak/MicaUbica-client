@@ -169,7 +169,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setStonesInMills([]);
             setHumanStones([])
             setComputerStones([])
-            setStones([])
             setTotalPlacedStones1(9); // Postavite broj postavljenih kamenova na početnu vrednost
             setTotalPlacedStones2(9);
             setWhitePlayerStonesOut(0); // Resetujte brojače za whitePlayerStonesOut i blackPlayerStonesOut
@@ -309,10 +308,17 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                     mill.some(s => s.square === square && s.index === index)
                 );
 
+                if(areAllComputerStonesInMills()){
+                    alert("Cannot remove stones that are part of a mill.");
+                    setIsMills(false)
+                    return;
+                }
+
                 if (isInComputerMills) {
                     alert("Cannot remove stones that are part of a mill.");
                     return;
                 }
+
                 // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
                 const newStones = computerStones.filter(stone => !(stone.square === square && stone.index === index));
                 setAllMills(prevMills => [...prevMills, stonesInMills]);
@@ -358,6 +364,20 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
         }
     
         console.log('Selected Stone:', selectedStone); // Log the selected stone for debugging
+    };
+
+    const areAllComputerStonesInMills = () => {
+        for (const stone of computerStones) {
+            const isInAnyMill = compusterMills.some(mill =>
+                mill.some(s => s.square === stone.square && s.index === stone.index)
+            );
+
+            if (!isInAnyMill) {
+                return false; // Ako bilo koji kamen nije uključen u mlin, vraća se false
+            }
+        }
+
+        return true; // Svi kamenovi su uključeni u neki mlin
     };
 
     const isMoveAllowed = (currentSquare, currentIndex, targetSquare, targetIndex, stones) => {

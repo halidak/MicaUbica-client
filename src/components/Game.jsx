@@ -73,6 +73,10 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
         if (isMills) {
             setCurrentMill(stonesInMills);
         }
+        const isWhitePlayerStuck = doAllStonesHaveMoves(stones, 'white');
+        console.log("BELI IMAL ", isWhitePlayerStuck)
+        const isBlackPlayerStuck = doAllStonesHaveMoves(stones, 'black');
+        console.log("CRNI IMAL ", isBlackPlayerStuck)
         if (whitePlayerStonesOut === 7 || blackPlayerStonesOut === 7) {
             if (whitePlayerStonesOut === 7) {
                 alert("Player 2 je pobedio!");
@@ -80,20 +84,35 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 alert("Player 1 je pobedio!");
             }
             // Resetujte sva stanja igre ovde, na primer:
+            checkGameOver();
+        }
+        
+    }, [stones, whitePlayerStonesOut, blackPlayerStonesOut]);
+
+    const doAllStonesHaveMoves = (stones, color) => {
+        for (const stone of stones) {
+          if (stone.color === color) {
+            const moves = allowedMoves[stone.square][stone.index];
+            if (moves.some(move => !stones[move.square]?.[move.index])) {
+              return true; // At least one stone has available moves
+            }
+          }
+        }
+        return false; // No stones have available moves
+      };
+
+    const checkGameOver = () => {
             setStones([]);
             setColor('white');
             setSelectedStone(null);
             setHighlightedMoves([]);
             setIsMills(false);
             setStonesInMills([]);
-            setTotalPlacedStones1(9); // Postavite broj postavljenih kamenova na početnu vrednost
+            setTotalPlacedStones1(9);
             setTotalPlacedStones2(9);
-            setWhitePlayerStonesOut(0); // Resetujte brojače za whitePlayerStonesOut i blackPlayerStonesOut
+            setWhitePlayerStonesOut(0);
             setBlackPlayerStonesOut(0);
         }
-        
-    }, [stones, whitePlayerStonesOut, blackPlayerStonesOut]);
-
 
     const toggleColor = () => {
         setColor(c => c === 'white' ? 'black' : 'white');
@@ -178,7 +197,6 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
         //     );
         // }
 
-        
         const areStonesInAllMills = stonesInMills.every(stoneInMill => {
             const occurrences = allMills.filter(allMill =>
                 allMill.square === stoneInMill.square && allMill.index === stoneInMill.index
@@ -203,8 +221,15 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                  const isInAllMills = allMills.some(mill =>
                 mill.some(s => s.square === square && s.index === index && s.color === color)
             );
-            
+            console.log("isInAllMills", isInAllMills);
+            console.log("areAllStonesInAllMills", areAllStonesInAllMills);
             if (!isInAllMills || areAllStonesInAllMills) {
+                if(areAllStonesInAllMills){
+                    alert("Ne mozete izbaciti figure koje su u mlinu");
+                    toggleColor();
+                    setIsMills(false)
+                    return;
+                }
                 // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
                 const newStones = stones.filter(stone => !(stone.square === square && stone.index === index));
                 setAllMills(prevMills => [...prevMills, stonesInMills]);
@@ -215,6 +240,12 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 } else if (stone.color === 'black') {
                     setBlackPlayerStonesOut((prevTotal) => prevTotal + 1);
                 }
+
+                const movedStonesInMills = stonesInMills.filter(stoneInMill => {
+                    return stoneInMill.square !== stone.square || stoneInMill.index !== stone.index;
+                });
+                setAllMills(prevMills => prevMills.filter(mill => !areMillsDifferent(mill, movedStonesInMills)));
+
                 setLastMill(stonesInMills);
                 setIsMills(false);
                 setStonesInMills([]);
@@ -222,6 +253,7 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
                 }
                 else{
                     alert("Ne mozete izbaciti figure koje su u mlinu");
+                    return;
                 }
             }
             return;
