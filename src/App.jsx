@@ -6,6 +6,7 @@ import Player1 from './components/playersHH/Player1';
 import Player2 from './components/playersHH/Player2';
 import React, { useState } from 'react';
 import { GameHC } from './components/GameHC';
+import { GameCC } from './components/GameCC';
 
 function App() {
   const [totalPlacedStones1, setTotalPlacedStones1] = useState(9);
@@ -100,6 +101,40 @@ function App() {
                   </React.Fragment>
               }
             />
+             <Route
+            path='/gameCC'
+                element={
+                  <React.Fragment>
+                    <div className="container">
+                    <div className="gameAndPlayersContainer">
+                    <Player1
+                    totalPlacedStones1={totalPlacedStones1}
+                    setTotalPlacedStones1={setTotalPlacedStones1}
+                    blackPlayerStonesOut={blackPlayerStonesOut}
+                    setBlackPlayerStonesOut={setBlackPlayerStonesOut}
+                  />
+                   <GameCC
+                    totalPlacedStones1={totalPlacedStones1}
+                    setTotalPlacedStones1={setTotalPlacedStones1}
+                    totalPlacedStones2={totalPlacedStones2}
+                    setTotalPlacedStones2={setTotalPlacedStones2}
+                    whitePlayerStonesOut={whitePlayerStonesOut}
+                    blackPlayerStonesOut={blackPlayerStonesOut}
+                    setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    setBlackPlayerStonesOut={setBlackPlayerStonesOut}
+                    level={level}
+                    />
+                    <Player2
+                    totalPlacedStones2={totalPlacedStones2}
+                    setTotalPlacedStones2={setTotalPlacedStones2}
+                    whitePlayerStonesOut={whitePlayerStonesOut}
+                    setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    />
+                    </div>
+                    </div>
+                  </React.Fragment>
+              }
+            />
             <Route
               path="/"
               element={
@@ -140,9 +175,32 @@ function App() {
                 </Link>
                   </div>
                 </Modal>
-                <Link to='/gameCC'>
-                  <Button>Computer vs Computer</Button>
+                {/* <Link to='/gameCC'> */}
+                  <Button Button onClick={showModal}>Computer vs Computer</Button>
+                {/* </Link> */}
+                <Modal title="Select level" open={isModalOpen} closeIcon={customCloseButton} footer={customModalFooter}>
+                  <div className='dugmad'>
+                   <Link to='/gameCC'>
+                  <Button type="primary"
+                  onClick={() => setLevel(0)}
+                  >Easy</Button>
                 </Link>
+                <br></br>
+                <br></br>
+                <Link to='/gameCC'>
+                  <Button type="primary"
+                  onClick={() => setLevel(1)}
+                  >Medium</Button>
+                </Link>
+                <br></br>
+                <br></br>
+                <Link to='/gameCC'>
+                  <Button type="primary"
+                   onClick={() => setLevel(2)}
+                  >Hard</Button>
+                </Link>
+                  </div>
+                </Modal>
                 </Flex>
                   </div>
                 </React.Fragment>
