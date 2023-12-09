@@ -13,11 +13,18 @@ function App() {
   const [totalPlacedStones2, setTotalPlacedStones2] = useState(9);
   const [whitePlayerStonesOut, setWhitePlayerStonesOut] = useState(0);
   const [blackPlayerStonesOut, setBlackPlayerStonesOut] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [level, setLevel] = useState(0)
-  const showModal = () => {
-    setIsModalOpen(true);
+  const [isModalOpenHC, setIsModalOpenHC] = useState(false); // Separate state for Human vs Computer modal
+  const [isModalOpenCC, setIsModalOpenCC] = useState(false); // Separate state for Computer vs Computer modal
+  const [level, setLevel] = useState(0);
+
+  const showModalHC = () => {
+    setIsModalOpenHC(true);
   };
+
+  const showModalCC = () => {
+    setIsModalOpenCC(true);
+  };
+
   const customCloseButton = (
     <span className="custom-close-button" role="img" aria-label="close">
       {/* You can replace this with your own close button icon or text */}
@@ -27,19 +34,19 @@ function App() {
   const customModalFooter = (
     <div>
       {/* Add any additional footer content if needed */}
-      <Button onClick={() => setIsModalOpen(false)}>{customCloseButton}Close</Button>
+      <Button onClick={() => setIsModalOpenHC(false)}>{customCloseButton}Close</Button>
     </div>
   );
 
   return (
     <Router>
-          <Routes>
-            <Route
-              path="/game"
-              element={
-                <React.Fragment>
-                  <div className="container">
-                  <div className="gameAndPlayersContainer">
+      <Routes>
+        <Route
+          path="/game"
+          element={
+            <React.Fragment>
+              <div className="container">
+                <div className="gameAndPlayersContainer">
                   <Player1
                     totalPlacedStones1={totalPlacedStones1}
                     setTotalPlacedStones1={setTotalPlacedStones1}
@@ -62,24 +69,24 @@ function App() {
                     whitePlayerStonesOut={whitePlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                   />
-                  </div>
                 </div>
-                </React.Fragment>
-              }
-            />
-            <Route
-            path='/gameHC'
-                element={
-                  <React.Fragment>
-                    <div className="container">
-                    <div className="gameAndPlayersContainer">
-                    <Player1
+              </div>
+            </React.Fragment>
+          }
+        />
+        <Route
+          path='/gameHC'
+          element={
+            <React.Fragment>
+              <div className="container">
+                <div className="gameAndPlayersContainer">
+                  <Player1
                     totalPlacedStones1={totalPlacedStones1}
                     setTotalPlacedStones1={setTotalPlacedStones1}
                     blackPlayerStonesOut={blackPlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                   />
-                   <GameHC
+                  <GameHC
                     totalPlacedStones1={totalPlacedStones1}
                     setTotalPlacedStones1={setTotalPlacedStones1}
                     totalPlacedStones2={totalPlacedStones2}
@@ -89,31 +96,31 @@ function App() {
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                     level={level}
-                    />
-                    <Player2
+                  />
+                  <Player2
                     totalPlacedStones2={totalPlacedStones2}
                     setTotalPlacedStones2={setTotalPlacedStones2}
                     whitePlayerStonesOut={whitePlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
-                    />
-                    </div>
-                    </div>
-                  </React.Fragment>
-              }
-            />
-             <Route
-            path='/gameCC'
-                element={
-                  <React.Fragment>
-                    <div className="container">
-                    <div className="gameAndPlayersContainer">
-                    <Player1
+                  />
+                </div>
+              </div>
+            </React.Fragment>
+          }
+        />
+        <Route
+          path='/gameCC'
+          element={
+            <React.Fragment>
+              <div className="container">
+                <div className="gameAndPlayersContainer">
+                  <Player1
                     totalPlacedStones1={totalPlacedStones1}
                     setTotalPlacedStones1={setTotalPlacedStones1}
                     blackPlayerStonesOut={blackPlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                   />
-                   <GameCC
+                  <GameCC
                     totalPlacedStones1={totalPlacedStones1}
                     setTotalPlacedStones1={setTotalPlacedStones1}
                     totalPlacedStones2={totalPlacedStones2}
@@ -123,90 +130,71 @@ function App() {
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                     level={level}
-                    />
-                    <Player2
+                  />
+                  <Player2
                     totalPlacedStones2={totalPlacedStones2}
                     setTotalPlacedStones2={setTotalPlacedStones2}
                     whitePlayerStonesOut={whitePlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
-                    />
-                    </div>
-                    </div>
-                  </React.Fragment>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <React.Fragment>
-                  <div className='centered-content'>
-                  <h1>Mills / Mica Ubica</h1>
-                  <p>Select game mode</p>
-                  <Flex gap="small" wrap="wrap">
+                  />
+                </div>
+              </div>
+            </React.Fragment>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <React.Fragment>
+              <div className='centered-content'>
+                <h1>Mills / Mica Ubica</h1>
+                <p>Select game mode</p>
+                <Flex gap="small" wrap="wrap">
                   <Link to='/game'>
-                  <Button>Human vs Human</Button>
-                </Link>
-                {/* <Link to='/gameHC'>
-                  <Button>Human vs Computer</Button>
-                </Link> */}
-                 <Button onClick={showModal}>
-                 Human vs Computer
-                </Button>
-                <Modal title="Select level" open={isModalOpen} closeIcon={customCloseButton} footer={customModalFooter}>
-                  <div className='dugmad'>
-                   <Link to='/gameHC'>
-                  <Button type="primary"
-                  onClick={() => setLevel(0)}
-                  >Easy</Button>
-                </Link>
-                <br></br>
-                <br></br>
-                <Link to='/gameHC'>
-                  <Button type="primary"
-                  onClick={() => setLevel(1)}
-                  >Medium</Button>
-                </Link>
-                <br></br>
-                <br></br>
-                <Link to='/gameHC'>
-                  <Button type="primary"
-                   onClick={() => setLevel(2)}
-                  >Hard</Button>
-                </Link>
-                  </div>
-                </Modal>
-                {/* <Link to='/gameCC'> */}
-                  <Button Button onClick={showModal}>Computer vs Computer</Button>
-                {/* </Link> */}
-                <Modal title="Select level" open={isModalOpen} closeIcon={customCloseButton} footer={customModalFooter}>
-                  <div className='dugmad'>
-                   <Link to='/gameCC'>
-                  <Button type="primary"
-                  onClick={() => setLevel(0)}
-                  >Easy</Button>
-                </Link>
-                <br></br>
-                <br></br>
-                <Link to='/gameCC'>
-                  <Button type="primary"
-                  onClick={() => setLevel(1)}
-                  >Medium</Button>
-                </Link>
-                <br></br>
-                <br></br>
-                <Link to='/gameCC'>
-                  <Button type="primary"
-                   onClick={() => setLevel(2)}
-                  >Hard</Button>
-                </Link>
-                  </div>
-                </Modal>
+                    <Button>Human vs Human</Button>
+                  </Link>
+                  <Button onClick={showModalHC}>Human vs Computer</Button>
+                  <Modal title="Select level" open={isModalOpenHC} closeIcon={customCloseButton} footer={customModalFooter}>
+                    <div className='dugmad'>
+                      <Link to='/gameHC'>
+                        <Button type="primary" onClick={() => setLevel(0)}>Easy</Button>
+                      </Link>
+                      <br></br>
+                      <br></br>
+                      <Link to='/gameHC'>
+                        <Button type="primary" onClick={() => setLevel(1)}>Medium</Button>
+                      </Link>
+                      <br></br>
+                      <br></br>
+                      <Link to='/gameHC'>
+                        <Button type="primary" onClick={() => setLevel(2)}>Hard</Button>
+                      </Link>
+                    </div>
+                  </Modal>
+                  <Button onClick={showModalCC}>Computer vs Computer</Button>
+                  <Modal title="Select level" open={isModalOpenCC} closeIcon={customCloseButton} footer={customModalFooter}>
+                    <div className='dugmad'>
+                      <Link to='/gameCC'>
+                        <Button type="primary" onClick={() => setLevel(0)}>Easy</Button>
+                      </Link>
+                      <br></br>
+                      <br></br>
+                      <Link to='/gameCC'>
+                        <Button type="primary" onClick={() => setLevel(1)}>Medium</Button>
+                      </Link>
+                      <br></br>
+                      <br></br>
+                      <Link to='/gameCC'>
+                        <Button type="primary" onClick={() => setLevel(2)}>Hard</Button>
+                      </Link>
+                    </div>
+                  </Modal>
                 </Flex>
-                  </div>
-                </React.Fragment>
-              }
-            />
-          </Routes>
+              </div>
+            </React.Fragment>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

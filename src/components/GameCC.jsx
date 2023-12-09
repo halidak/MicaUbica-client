@@ -17,7 +17,8 @@ export function GameCC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     const [highlightedMoves, setHighlightedMoves] = useState([]);
     const [compusterMills, setComputerMills] = useState([])  
     const [currentMill, setCurrentMill] = useState([]);
-    const [player, setPlayer] = useState('human')
+    const [isLoading, setIsLoading] = useState(false);
+    const [player, setPlayer] = useState('human');
 
     useEffect(() => {
        //post request
@@ -60,7 +61,9 @@ export function GameCC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 console.error('Error:', error);
             });
         };
-        sendPostRequest()
+        if(whitePlayerStonesOut < 7 || blackPlayerStonesOut < 7){
+            sendPostRequest()
+        }
             if (whitePlayerStonesOut === 7 || blackPlayerStonesOut === 7) {
                 if (whitePlayerStonesOut === 7) {
                     alert("Player 2 je pobedio!");
@@ -78,18 +81,26 @@ export function GameCC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setWhitePlayerStonesOut(0);
                 setBlackPlayerStonesOut(0);
             }
-    }, [humanStones, computerStones])
+    }, [player])
 
 
     useEffect(() => {
 
-        const apiUrlReset = 'http://localhost:8000/reset';
+        const apiUrlReset = 'http://localhost:8000/resetC';
         
         fetch(apiUrlReset)
             .then(response => {
                 console.log(response)
             })
-
+            .then(data => {
+                console.log('Server response:', data);
+                setHumanStones(data.board.currentState.humanStones)
+                setComputerStones(data.board.currentState.computerStones)
+                setTotalPlacedStones2(data.board.pending.computer)
+                setTotalPlacedStones1(data.board.pending.human)
+                setWhitePlayerStonesOut(data.board.out.human)
+                setBlackPlayerStonesOut(data.board.out.computer)
+            })
         setStones([]);
         setColor('white');
         setSelectedStone(null);
