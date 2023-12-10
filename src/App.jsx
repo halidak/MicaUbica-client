@@ -38,6 +38,13 @@ function App() {
     </div>
   );
 
+  const customModalFooter2 = (
+    <div>
+      {/* Add any additional footer content if needed */}
+      <Button onClick={() => setIsModalOpenCC(false)}>{customCloseButton}Close</Button>
+    </div>
+  );
+
   return (
     <Router>
       <Routes>
@@ -172,7 +179,7 @@ function App() {
                     </div>
                   </Modal>
                   <Button onClick={showModalCC}>Computer vs Computer</Button>
-                  <Modal title="Select level" open={isModalOpenCC} closeIcon={customCloseButton} footer={customModalFooter}>
+                  <Modal title="Select level" open={isModalOpenCC} closeIcon={customCloseButton} footer={customModalFooter2}>
                     <div className='dugmad'>
                       <Link to='/gameCC'>
                         <Button type="primary" onClick={() => setLevel(0)}>Easy</Button>
