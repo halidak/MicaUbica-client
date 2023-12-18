@@ -140,12 +140,14 @@ function App() {
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                     level={level}
+                    setBestMove={setBestMove}
                   />
                   <Player2
                     totalPlacedStones2={totalPlacedStones2}
                     setTotalPlacedStones2={setTotalPlacedStones2}
                     whitePlayerStonesOut={whitePlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    bestMove={bestMove}
                   />
                 </div>
               </div>

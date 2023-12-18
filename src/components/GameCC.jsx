@@ -7,7 +7,7 @@ import { millsPostitions } from './millsPositions';
 
 
 export function GameCC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedStones2, setTotalPlacedStones2,
-    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut, level }) {
+    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut, level, setBestMove }) {
     
     const [humanStones, setHumanStones] = useState([])
     const [computerStones, setComputerStones] = useState([])
@@ -52,6 +52,7 @@ export function GameCC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 setTotalPlacedStones1(data.board.pending.human)
                 setWhitePlayerStonesOut(data.board.out.human)
                 setBlackPlayerStonesOut(data.board.out.computer)
+                setBestMove(data.bestMove)
                 if(player == 'human')
                     setPlayer('computer')
                 else
