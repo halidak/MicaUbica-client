@@ -10,6 +10,17 @@
   font-size: 20px;
 }
 
+.playerTitle2{
+  font-size: 30px;
+  margin-top: 20px;
+}
+
+.playerTitle3{
+  font-size: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .player {
   display: flex;
   flex-direction: column;

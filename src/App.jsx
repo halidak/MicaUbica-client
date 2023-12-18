@@ -16,6 +16,7 @@ function App() {
   const [isModalOpenHC, setIsModalOpenHC] = useState(false); // Separate state for Human vs Computer modal
   const [isModalOpenCC, setIsModalOpenCC] = useState(false); // Separate state for Computer vs Computer modal
   const [level, setLevel] = useState(0);
+  const [bestMove, setBestMove] = useState(null)
 
   const showModalHC = () => {
     setIsModalOpenHC(true);
@@ -103,12 +104,14 @@ function App() {
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
                     setBlackPlayerStonesOut={setBlackPlayerStonesOut}
                     level={level}
+                    setBestMove={setBestMove}
                   />
                   <Player2
                     totalPlacedStones2={totalPlacedStones2}
                     setTotalPlacedStones2={setTotalPlacedStones2}
                     whitePlayerStonesOut={whitePlayerStonesOut}
                     setWhitePlayerStonesOut={setWhitePlayerStonesOut}
+                    bestMove={bestMove}
                   />
                 </div>
               </div>

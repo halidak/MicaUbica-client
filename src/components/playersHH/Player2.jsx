@@ -7,9 +7,27 @@ import './Player2.css';
 //   setTotalPlacedStones: PropTypes.func.isRequired,
 // }
 
-const Player2 = ({totalPlacedStones2, whitePlayerStonesOut}) => {
+const Player2 = ({totalPlacedStones2, whitePlayerStonesOut, bestMove}) => {
   return (
     <div className="playerContainer">
+        <div className="playerTitle2">Last move:</div>
+        {bestMove && (
+        <div className="playerTitle3">
+          {Array.isArray(bestMove) ? (
+            bestMove.map((move, index) => (
+              <div key={index}>
+                Square: {move.square}, Index: {move.index}
+              </div>
+            ))
+          ) : (
+            <div>
+              Square: {bestMove.square}, Index: {bestMove.index}
+            </div>
+          )}
+        </div>
+      )}
+        <br></br>
+        <br></br>
       <div className="playerTitle">Player 2</div>
       <div className="player">
         {[...Array(Math.max(0, totalPlacedStones2))].map((_, index) => (

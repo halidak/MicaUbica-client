@@ -6,7 +6,7 @@ import { allowedMoves } from './allowedMoves';
 import { millsPostitions } from './millsPositions';
 
 export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedStones2, setTotalPlacedStones2,
-    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut, level }) {
+    whitePlayerStonesOut, blackPlayerStonesOut, setWhitePlayerStonesOut, setBlackPlayerStonesOut, level, setBestMove }) {
     
     const [humanStones, setHumanStones] = useState([])
     const [computerStones, setComputerStones] = useState([])
@@ -92,7 +92,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 return response.json();
             })
             .then(data => {
-                // Obrada odgovora sa servera, ako je potrebno
                 console.log('Server response:', data);
                 console.log("NEXT PLAYER", data.nextPlayer)
                 setComputerStones(data.computerStones);
@@ -101,6 +100,7 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 console.log("komp",computerStones)
                 setTotalPlacedStones2(data.totalPlacedStones2)
                 setWhitePlayerStonesOut(data.whitePlayerStonesOut)
+                setBestMove(data.bestMove)
 
                 if(data.isComputerMills === true){
                     setCurrentMill(data.found_mill)
@@ -143,14 +143,14 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
     
                 // If this mill is unique, add it to stonesInMills and allMills
                 if (isUniqueMill) {
-                    stonesInMills.push(...stonesInPosition); // Add stones in the mill to the array
+                    stonesInMills.push(...stonesInPosition); 
                     setAllMills(prevMills => [...prevMills, sortedStonesInMill]);
                 }
             }
         }
     
-        setStonesInMills(stonesInMills); // Update state with stones in mills
-        return stonesInMills.length > 0; // Return true if there are stones in mills
+        setStonesInMills(stonesInMills);
+        return stonesInMills.length > 0; 
     };
 
     useEffect(() => {
@@ -173,7 +173,6 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             } else if (blackPlayerStonesOut === 7) {
                 alert("Player 1 je pobedio!");
             }
-            // Resetujte sva stanja igre ovde, na primer:
             setStones([]);
             setColor('white');
             setSelectedStone(null);
@@ -182,9 +181,9 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
             setStonesInMills([]);
             setHumanStones([])
             setComputerStones([])
-            setTotalPlacedStones1(9); // Postavite broj postavljenih kamenova na početnu vrednost
+            setTotalPlacedStones1(9); 
             setTotalPlacedStones2(9);
-            setWhitePlayerStonesOut(0); // Resetujte brojače za whitePlayerStonesOut i blackPlayerStonesOut
+            setWhitePlayerStonesOut(0);
             setBlackPlayerStonesOut(0);
         }
         
