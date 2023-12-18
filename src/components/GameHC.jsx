@@ -323,6 +323,8 @@ export function GameHC({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedS
                 if(areAllComputerStonesInMills()){
                     alert("Cannot remove stones that are part of a mill.");
                     setIsMills(false)
+                    sendPostRequest(humanStones, computerStones, totalPlacedStones2, nextPlayer, totalPlacedStones2, whitePlayerStonesOut, blackPlayerStonesOut, allMills)                
+
                     return;
                 }
 

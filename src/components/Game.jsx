@@ -224,12 +224,12 @@ export function Game({ totalPlacedStones1, setTotalPlacedStones1, totalPlacedSto
             console.log("isInAllMills", isInAllMills);
             console.log("areAllStonesInAllMills", areAllStonesInAllMills);
             if (!isInAllMills || areAllStonesInAllMills) {
-                if(areAllStonesInAllMills){
-                    alert("Ne mozete izbaciti figure koje su u mlinu");
-                    toggleColor();
-                    setIsMills(false)
-                    return;
-                }
+                // if(areAllStonesInAllMills){
+                //     alert("Ne mozete izbaciti figure koje su u mlinu");
+                //     toggleColor();
+                //     setIsMills(false)
+                //     return;
+                // }
                 // Ako kamen nije uključen u neki mlin, onda ga možete izbaciti
                 const newStones = stones.filter(stone => !(stone.square === square && stone.index === index));
                 setAllMills(prevMills => [...prevMills, stonesInMills]);
